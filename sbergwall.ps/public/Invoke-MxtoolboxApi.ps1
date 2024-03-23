@@ -15,12 +15,15 @@ function Invoke-MxtoolboxApi {
         [Alias('Command', 'LookupType', 'Lookup')]
         [String]$Type,
 
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true,  ParameterSetName = "Lookup")]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true,  ParameterSetName = "Lookup", HelpMessage = "The Domain you want to look up.")]
         [Alias('DomainName', 'Argument')]
         [String]$Domain,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Lookup")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Usage")]
+        [Parameter(ParameterSetName = "Lookup")]
+        [int]$Port,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "Lookup", HelpMessage = "Please enter your MXToolBox API key. This key can be found by navigating to 'https://mxtoolbox.com/user/api' in a web browser")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Usage", HelpMessage = "Please enter your MXToolBox API key. This key can be found by navigating to 'https://mxtoolbox.com/user/api' in a web browser")]
         [String]$ApiKey,
 
         [Parameter(Mandatory = $true, ParameterSetName = "Usage")]
@@ -31,10 +34,14 @@ function Invoke-MxtoolboxApi {
             $uri = "https://api.mxtoolbox.com/api/v1/Usage?Authorization=$apikey"
         }
         else {
+            If ($port) {
+                $domain = $domain + "&port=$port"
+            }
             $uri = "https://api.mxtoolbox.com/api/v1/Lookup/$type/?argument=$Domain&Authorization=$apikey"
         }
 
         try {
+            Write-Verbose "Uri: $uri"
             Invoke-RestMethod -Method Get -Uri $uri -ErrorAction Stop
         }
         catch {
