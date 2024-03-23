@@ -8,22 +8,32 @@ function Invoke-MxtoolboxApi {
     Invoke-MxtoolboxApi -ApiKey 'YourAPIKey' -Type dns -Domain google.com
 #>
 
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Lookup')]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, HelpMessage = "The type of lookup you want, for example mx or spf", ParameterSetName = "Lookup")]
         [ValidateSet('blacklist', 'smtp', 'mx', 'a', 'spf', 'txt', 'ptr', 'cname', 'whois', 'arin', 'soa', 'tcp', 'http', 'https', 'ping', 'trace', 'dns')]
         [Alias('Command', 'LookupType', 'Lookup')]
         [String]$Type,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true,  ParameterSetName = "Lookup")]
         [Alias('DomainName', 'Argument')]
         [String]$Domain,
 
-        [Parameter(Mandatory = $true)]
-        [String]$ApiKey
+        [Parameter(Mandatory = $true, ParameterSetName = "Lookup")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Usage")]
+        [String]$ApiKey,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "Usage")]
+        [switch]$Usage
     )
     process {
-        $uri = "https://api.mxtoolbox.com/api/v1/Lookup/$type/?argument=$Domain&Authorization=$apikey"
+        If ($usage) {
+            $uri = "https://api.mxtoolbox.com/api/v1/Usage?Authorization=$apikey"
+        }
+        else {
+            $uri = "https://api.mxtoolbox.com/api/v1/Lookup/$type/?argument=$Domain&Authorization=$apikey"
+        }
+
         try {
             Invoke-RestMethod -Method Get -Uri $uri -ErrorAction Stop
         }
