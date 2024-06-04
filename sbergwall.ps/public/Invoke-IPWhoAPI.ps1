@@ -1,10 +1,16 @@
 function Invoke-IPWhoAPI {
+    [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true, ParameterSetName = 'IPv4')]
         [ValidateScript({$_ -match '^(\d{1,3}\.){3}\d{1,3}$'})]
-        $IPv4Address
+        $IPv4Address,
+
+        [Parameter(Mandatory=$true, ParameterSetName = 'IPv6')]
+        [ValidateScript({$_ -match '^(([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:)|(([0-9A-Fa-f]{1,4}:){1,6}|:):([0-9A-Fa-f]{1,4}|:){1,6}(([0-9]{1,3}\.){3}[0-9]{1,3}|[0-9A-Fa-f]{1,4})?)$'})]
+        $IPv6Address
     )
 
+    
     class DNSNameCache {
         [hashtable]$LookupTable
 
@@ -28,6 +34,9 @@ function Invoke-IPWhoAPI {
     $DNSNameCache = [DNSNameCache]::new()
 
     foreach ($line in $IPv4Address) {
+        $DNSNameCache.GetDNSName($line)
+    }
+    foreach ($line in $IPv6Address) {
         $DNSNameCache.GetDNSName($line)
     }
 }
