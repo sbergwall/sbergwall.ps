@@ -1,3 +1,59 @@
+<#
+.SYNOPSIS
+    Updates installed PowerShell modules to their latest available versions.
+
+.DESCRIPTION
+    The Update-Modules function retrieves all installed PowerShell modules and updates them to their latest available versions. It can handle both prerelease and production versions of the modules.
+
+.PARAMETER AllowPrerelease
+    Allows updating to prerelease versions of the modules if available.
+    Type: SwitchParameter
+    Position: Named
+    Mandatory: No
+    Accepts pipeline input: No
+    Accepts wildcard characters: No
+
+.PARAMETER Name
+    Specifies the name of the module to update. The default is '*' which updates all modules.
+    Type: String
+    Position: Named
+    Mandatory: No
+    Default value: '*'
+    Accepts pipeline input: No
+    Accepts wildcard characters: No
+
+.PARAMETER WhatIf
+    Shows what would happen if the command runs. The command is not actually executed.
+    Type: SwitchParameter
+    Position: Named
+    Mandatory: No
+    Accepts pipeline input: No
+    Accepts wildcard characters: No
+
+.EXAMPLE
+    Update-Modules
+    This command updates all installed modules to their latest production versions.
+
+.EXAMPLE
+    Update-Modules -AllowPrerelease
+    This command updates all installed modules to their latest prerelease versions if available.
+
+.EXAMPLE
+    Update-Modules -Name 'ModuleName'
+    This command updates the specified module 'ModuleName' to its latest version.
+
+.EXAMPLE
+    Update-Modules -WhatIf
+    This command shows what would happen if the modules were updated, but does not actually perform the update.
+
+.LINK
+    https://powershellisfun.com/2022/07/11/updating-your-powershell-modules-to-the-latest-version-plus-cleaning-up-older-versions/
+
+.NOTES
+    The function requires the PowerShellGet module to be installed.
+    Ensure you have the necessary permissions to update and uninstall modules.
+
+#>
 function Update-Modules {
     param (
         [switch]$AllowPrerelease,

@@ -1,3 +1,56 @@
+<#
+.SYNOPSIS
+    Retrieves the last logon date and the domain controller that recorded the logon for specified Active Directory users.
+
+.DESCRIPTION
+    The Get-ADUserLastLogon function queries all domain controllers in the Active Directory domain to determine the most recent logon date and the domain controller that recorded this logon for specified users. It supports retrieving this information for one or multiple users, specified either directly by SAM account names, or indirectly via an LDAP filter.
+
+.PARAMETER SamAccountName
+    Specifies the SAM account name(s) of the user(s) whose last logon information is to be retrieved. This parameter accepts pipeline input.
+    Type: Object[]
+    Aliases: Identity
+    Position: 0
+    Required: No
+    Accepts pipeline input: True (ByValue, ByPropertyName)
+    Accepts wildcard characters: No
+
+.PARAMETER Property
+    Specifies additional properties of the user(s) to retrieve. This parameter accepts a single string or an array of strings.
+    Type: String[]
+    Position: 1
+    Required: No
+    Accepts pipeline input: No
+    Accepts wildcard characters: No
+
+.PARAMETER Filter
+    Specifies an LDAP filter to retrieve users based on criteria. If no SamAccountName is specified, the function will retrieve all user accounts in the domain that match the filter.
+    Type: String
+    Position: 2
+    Required: No
+    Accepts pipeline input: No
+    Accepts wildcard characters: No
+
+.EXAMPLE
+    Get-ADUserLastLogon -SamAccountName jdoe
+    This command retrieves the last logon date and the domain controller that recorded the logon for the user with the SAM account name jdoe.
+
+.EXAMPLE
+    Get-ADUserLastLogon -SamAccountName jdoe, asmith
+    This command retrieves the last logon date and the domain controller that recorded the logon for the users with the SAM account names jdoe and asmith.
+
+.EXAMPLE
+    Get-ADUserLastLogon -Filter "Department -eq 'Sales'"
+    This command retrieves the last logon date and the domain controller that recorded the logon for all users in the Sales department.
+
+.EXAMPLE
+    Get-ADUserLastLogon -SamAccountName jdoe -Property mail, title
+    This command retrieves the last logon date, the domain controller that recorded the logon, and the mail and title properties for the user with the SAM account name jdoe.
+
+.NOTES
+    The function requires the Active Directory PowerShell module.
+    Ensure you have the necessary permissions to query Active Directory and access domain controllers.
+#>
+
 function Get-ADUserLastLogon {
     param
     (

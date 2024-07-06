@@ -1,58 +1,67 @@
-function Test-ADCredential {
-    <#
-.Synopsis
-   Short description
+<#
+.SYNOPSIS
+    Validates Active Directory credentials.
+
 .DESCRIPTION
-   Long description
+    The Test-ADCredential function checks if the provided Active Directory credentials are valid by attempting to authenticate against the domain.
+
+.PARAMETER Credential
+    Specifies the Active Directory credentials to validate. This parameter accepts a PSCredential object.
+    Type: PSCredential
+    Position: 0
+    Mandatory: Yes
+    Accepts pipeline input: True (ByPropertyName)
+    Accepts wildcard characters: No
+
 .EXAMPLE
-   Example of how to use this cmdlet
+    $cred = Get-Credential
+    Test-ADCredential -Credential $cred
+    This command validates the Active Directory credentials provided by the Get-Credential cmdlet.
+
 .EXAMPLE
-   Another example of how to use this cmdlet
-.INPUTS
-   Inputs to this cmdlet (if any)
-.OUTPUTS
-   Output from this cmdlet (if any)
+    Test-ADCredential -Credential (Get-Credential)
+    This command validates the Active Directory credentials provided by the Get-Credential cmdlet inline.
+
 .NOTES
-   General notes
-.COMPONENT
-   The component this cmdlet belongs to
-.ROLE
-   The role this cmdlet belongs to
-.FUNCTIONALITY
-   The functionality that best describes this cmdlet
+    The function requires the System.DirectoryServices.AccountManagement assembly.
+    Ensure you have the necessary permissions to query Active Directory.
+
+.OUTPUTS
+    System.Boolean
+    The function returns $true if the credentials are valid, and $false otherwise.
 #>
-    [CmdletBinding()]
+function Test-ADCredential {
+   [CmdletBinding()]
 
-    [OutputType([bool])]
+   [OutputType([bool])]
 
-    Param (
-        # Credential to test
-        [Parameter(ValueFromPipelineByPropertyName = $true,
-            Position = 0)]
-        [ValidateNotNull()]
-        [ValidateNotNullOrEmpty()]
-        [System.Management.Automation.PSCredential]
-        [System.Management.Automation.Credential()]
-        $Credential = [System.Management.Automation.PSCredential]::Empty
-    )
+   Param (
+      [Parameter(ValueFromPipelineByPropertyName = $true,
+         Position = 0)]
+      [ValidateNotNull()]
+      [ValidateNotNullOrEmpty()]
+      [System.Management.Automation.PSCredential]
+      [System.Management.Automation.Credential()]
+      $Credential = [System.Management.Automation.PSCredential]::Empty
+   )
 
-    Begin {
-    }
+   Begin {
+   }
 
-    Process {
-        try {
-            $UserName = $Credential.GetNetworkCredential().UserName
-            $Password = $Credential.GetNetworkCredential().Password
+   Process {
+      try {
+         $UserName = $Credential.GetNetworkCredential().UserName
+         $Password = $Credential.GetNetworkCredential().Password
 
-            Add-Type -AssemblyName System.DirectoryServices.AccountManagement
-            $ds = New-Object System.DirectoryServices.AccountManagement.PrincipalContext('domain')
-            $ds.ValidateCredentials($UserName, $Password)
-        }
-        catch {
-            $PSCmdlet.ThrowTerminatingError($PSitem)
-        }
-    }
+         Add-Type -AssemblyName System.DirectoryServices.AccountManagement
+         $ds = New-Object System.DirectoryServices.AccountManagement.PrincipalContext('domain')
+         $ds.ValidateCredentials($UserName, $Password)
+      }
+      catch {
+         $PSCmdlet.ThrowTerminatingError($PSitem)
+      }
+   }
 
-    End {
-    }
+   End {
+   }
 }
