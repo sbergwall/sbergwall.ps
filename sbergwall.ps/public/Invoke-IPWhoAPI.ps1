@@ -38,12 +38,12 @@
 function Invoke-IPWhoAPI {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true, ParameterSetName = 'IPv4')]
-        [ValidateScript({$_ -match '^(\d{1,3}\.){3}\d{1,3}$'})]
+        [Parameter(Mandatory = $true, ParameterSetName = 'IPv4')]
+        [ValidateScript({ $_ -match '^(\d{1,3}\.){3}\d{1,3}$' })]
         $IPv4Address,
 
-        [Parameter(Mandatory=$true, ParameterSetName = 'IPv6')]
-        [ValidateScript({$_ -match '^(([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:)|(([0-9A-Fa-f]{1,4}:){1,6}|:):([0-9A-Fa-f]{1,4}|:){1,6}(([0-9]{1,3}\.){3}[0-9]{1,3}|[0-9A-Fa-f]{1,4})?)$'})]
+        [Parameter(Mandatory = $true, ParameterSetName = 'IPv6')]
+        [ValidateScript({ $_ -match '^(([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:)|(([0-9A-Fa-f]{1,4}:){1,6}|:):([0-9A-Fa-f]{1,4}|:){1,6}(([0-9]{1,3}\.){3}[0-9]{1,3}|[0-9A-Fa-f]{1,4})?)$' })]
         $IPv6Address
     )
 
@@ -56,7 +56,7 @@ function Invoke-IPWhoAPI {
 
         [psobject] GetDNSName([string]$Identity) {
             if ($this.LookupTable.Contains($Identity)) {
-                Write-Verbose "Dns name found in cache."
+                Write-Verbose 'Dns name found in cache.'
                 return $this.LookupTable[$Identity]
             }
             else {
