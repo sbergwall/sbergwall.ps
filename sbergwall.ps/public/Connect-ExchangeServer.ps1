@@ -35,17 +35,14 @@ Function Connect-ExchangeServer {
     }
 
     PROCESS {
-
-        #$Credentials = Get-Credential -Message "Enter your Exchange admin credentials"
-
         try {
             If ($PSBoundParameters.ContainsKey('Credential')) {
-                $ExOPSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$ComputerName/PowerShell/ -Authentication Kerberos -ErrorAction Stop -Credential $Credential
-                Import-PSSession $ExOPSession -ErrorAction Stop | Out-Null
+                $global:session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$ComputerName/PowerShell/ -Authentication Kerberos -Credential $Credential
+                Import-Module (Import-PSSession $global:Session -DisableNameChecking) -Global
             } # end If statement
             else {
-                $ExOPSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$ComputerName/PowerShell/ -Authentication Kerberos -ErrorAction Stop
-                Import-PSSession $ExOPSession -ErrorAction Stop | Out-Null
+                $global:session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$ComputerName/PowerShell/ -Authentication Kerberos
+                Import-Module (Import-PSSession $global:Session -DisableNameChecking) -Global
             } # end Else statement
         }
         catch {
