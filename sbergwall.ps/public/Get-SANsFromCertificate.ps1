@@ -1,3 +1,23 @@
+<#
+.SYNOPSIS
+Retrieves Subject Alternative Names (SANs) from a given certificate.
+
+.DESCRIPTION
+The `Get-SANsFromCertificate` function extracts SANs from a provided certificate in PEM or Base64 format.
+
+.PARAMETER BinaryCertificate
+The certificate in PEM or Base64 format.
+
+.EXAMPLE
+Get-SANsFromCertificate -BinaryCertificate "<Base64EncodedCertificate>"
+
+.EXAMPLE
+$cert = Get-Content -Path "certificate.pem"
+Get-SANsFromCertificate -BinaryCertificate $cert
+
+.NOTES
+Author: sbergwall
+#>
 function Get-SANsFromCertificate {
     param(
         [Parameter(Mandatory)]
